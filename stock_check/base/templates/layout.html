@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="title" content="Reddit Clone: {% block meta_title %}{% endblock %}">
+        <meta name="description" content="{% block meta_description %}{% endblock %}">
+        <meta property="og:url" content="{{ request.get_full_path }}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Reddit Clone: {% block meta_og_title %}{% endblock %}" />
+        <meta property="og:description" content="{% block meta_og_description %}{% endblock %}" />
+        <meta property="og:image" content="" />
+        <title>Reddit Clone</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'base/css/style.css' %}">
+        
+        {% block extra_style %}{% endblock %}
+    </head>
+
+    <body>
+    <header>
+        <nav class="top_nav navbar navbar-expand">
+            <a href="{% url 'forum_list' %}" class="nav-link nav-item">HOME -</a>
+            <a href="{% url 'forum_list' %}" class="nav-link nav-item">POPULAR -</a>
+            <a href="{% url 'forum_list' %}" class="nav-link nav-item">RANDOM - </a>
+            <a href="{% url 'forum_list' %}" class="nav-link nav-item">VIDOES - </a>
+        </nav>
+    </header>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block body %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+    </body>
+</html>
