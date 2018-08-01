@@ -1,6 +1,6 @@
-from rest_framework import generics, mixins
-
 from django.contrib.auth.models import User
+
+from rest_framework import generics, mixins
 
 from stocks.models import Stock, Favorites
 from apis.rest_serializer import StockSerializer
@@ -23,6 +23,7 @@ class RetrieveApiView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return Stock.objects.all()
+
 
 # Detail view, pk is the standard lookup field
 class UpdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):

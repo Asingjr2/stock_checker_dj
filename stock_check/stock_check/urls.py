@@ -16,7 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/v1/", include("apis.rest_urls", namespace="rest"))
+    path('api/v1/', include("apis.rest_urls", namespace="rest")),
+    path('stocks/', include('stocks.urls')),
+
+    # Required for allauth
+    path('/accounts/', include('allauth.urls')),
 ]
