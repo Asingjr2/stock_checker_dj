@@ -36,10 +36,13 @@
             <button class="btn btn-light">
                 <a href="">FAVORITES</a>
             </button>
-            <form action="" id="center" class="form-inline">
-                <input type="text" class="form-control mr-sm-2" type="seach" placeholder="ticker" aria-label="Search">
+
+            <form action="/stocks/stock_search" id="center" class="form-inline" method="post">
+                {% csrf_token %} 
+                <input type="text" class="form-control mr-sm-2" type="seach" placeholder="ticker" aria-label="Search" name="ticker">
                 <button class="btn btn-light my-2 my-sm-0"> Check Stock Info</button>
             </form>
+
             <button class="btn btn-light">
                 <a href="/accounts/logout">LOGOUT</a>
             </button>
