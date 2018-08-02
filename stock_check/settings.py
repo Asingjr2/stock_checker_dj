@@ -144,6 +144,13 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# # Login redirect has different syntax than logout
+SITE_ID = 2
+
 LOGIN_REDIRECT_URL = "/stocks/home/"
 ACCOUNT_LOGOUT_REDIRECT_URL ="/accounts/login"
+
+
+# Heroku server support settings
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+django_heroku.settings(locals())

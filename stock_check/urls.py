@@ -23,5 +23,5 @@ urlpatterns = [
     path('stocks/', include('stocks.urls')),
 
     # Required for allauth
-    path('/accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),
 ]

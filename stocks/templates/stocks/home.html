@@ -1,48 +1,50 @@
+{% extends 'layout.html' %}
 {% load staticfiles %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <title>STOCK CHECKER</title>
-</head>
-<body>
-    <h1>WELCOME TO THE HOME PAGE</h1>
+{% block body %}
+<section>
 
-    <form action="{% url 'stocks:home' %}" method="POST">
-        {% csrf_token %} 
-        <input type="text" name="ticker" placeholder="TICKER">
-        <input type="hidden" name="form" value="new_stock">
-        <input type="submit" value="CHECK STOCK">
-    </form>
-    {% if stock_data %}
-    <ol>
-        <form action="{% url 'stocks:home' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="form" value="new_favorite">
-            <input type="hidden" name="stock" value=" {{ stock }}">
-            <button>
-                <input type="submit" value="ADD TO FAVORITES">
+    <div class="container" id="mt">
+        {% if favorites.count > 0 %}
+        <ol>
+            <table class="table table-hover">
+                <tr>
+                    <th>Open</th>
+                    <th>High</th>
+                    <th>Low</th>
+                    <th>Close</th>
+                </tr>
+                <tr>
+                    {% for info in stock_data %}
+                    <td>{{ info }}</td>
+                {% endfor %}
+            </tr>
+        </table> 
+        {% else %}
+            <div class="jumbotron">
+                <div id='center-text'>
+                    <h1>NO STOCKS ADDED TO FAVORITES</h1>
+                    <p>Enter a ticker below to check stock price information</p>
+                </div>
+            </div>
+        {% endif %}
+        </ol>
+    
+        <nav class="navbar fixed-bottom navbar-light " id="green">
+            <button class="btn btn-light mr-2">
+                <a href="">HOME</a>
             </button>
-        </form>
-        <table class="table table-hover">
-            <tr>
-              <th>Open</th>
-              <th>High</th>
-              <th>Low</th>
-              <th>Close</th>
-            </tr>
-            <tr>
-            {% for info in stock_data %}
-                <td>{{ info }}</td>
-            {% endfor %}
-            </tr>
-          </table> 
-      {% endif %}
-    </ol>
-</body>
-</html>
+            <button class="btn btn-light">
+                <a href="">FAVORITES</a>
+            </button>
+            <form action="" id="center" class="form-inline">
+                <input type="text" class="form-control mr-sm-2" type="seach" placeholder="ticker" aria-label="Search">
+                <button class="btn btn-light my-2 my-sm-0"> Check Stock Info</button>
+            </form>
+            <button class="btn btn-light">
+                <a href="/accounts/logout">LOGOUT</a>
+            </button>
+            
+        </nav>
+    </div>
+</section>
+{% endblock %}
