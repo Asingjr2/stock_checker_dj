@@ -19,24 +19,48 @@ from .models import Stock
 class HomeView(View):
     def get(self, request):
         queryset = Stock.objects.all().filter(user__id = (self.request.user.id))
-        return render(request, "stocks/home.html", {"user_stocks": queryset})
+        stock_data = {}
+
+        today= datetime.today()
+        subtract_day = timedelta(days=-1)   
+        substract_two_days = timedelta(days=-2)   
+        if today.strftime("%A") == "Saturday":
+            today += subtract_day
+        if today.strftime("%A") == "Sunday":
+            today += substract_two_days
+        today_formatted = today.strftime("%Y-%m-%d")
+
+        for stock in queryset:
+            resp = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + str(stock.ticker_symbol) + "&apikey=HVS4381TKE7Y9YOS")
+            data = resp.json()
+
+
+            if  today_formatted not in data['Time Series (Daily)']:
+                print("subtracting a day")
+                today += subtract_day
+                today_formatted = today.strftime("%Y-%m-%d")
+                s_data = resp.json()['Time Series (Daily)'][today_formatted]
+                price_data= [ resp.json()["Meta Data"]["2. Symbol"], s_data["1. open"], s_data["2. high"], s_data["3. low"], s_data["4. close"]  ]
+                stock_data[str(stock.ticker_symbol)] = price_data
+                print(stock_data)
+
+        return render(request, "stocks/home.html", {"user_stocks": queryset, "stock_data": stock_data})
 
 
 class StockSearchView(View):
     def get(self, request):
         if "current_stock" in request.session:
-            print("there is a stock")
-            Fri1 = timedelta(days=-1)   # Will subtract day if calendar day falls on Sat
-            Fri2 = timedelta(days=-2)   # Will subtract day if calendar day falls on Sun
-            today= datetime.today()
+            subtract_day = timedelta(days=-1)   # Will subtract day if calendar day falls on Sat
+            substract_two_days = timedelta(days=-2)   # Will subtract day if calendar day falls on Su
+            today = datetime.today()
             
             if today.strftime("%A") == "Saturday":
-                today += Fri1
+                today += subtract_day
             if today.strftime("%A") == "Sunday":
-                today += Fri2
+                today += substract_two_days
 
             today_formatted = today.strftime("%Y-%m-%d")
-            print(today_formatted)
+
 
             response = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + str(request.session["current_stock"]) + "&apikey=HVS4381TKE7Y9YOS")
             print("response info {}".format(response))
@@ -44,6 +68,10 @@ class StockSearchView(View):
             if 'Time Series (Daily)' in response.json():
                 print("real stock")
                 print(response.json()["Meta Data"]["2. Symbol"])
+                if  today_formatted not in response.json()['Time Series (Daily)']:
+                    print("subtracting a day")
+                    today += subtract_day
+                    today_formatted = today.strftime("%Y-%m-%d")
                 ss = response.json()['Time Series (Daily)'][today_formatted]
                 stock_data = [ response.json()["Meta Data"]["2. Symbol"],ss["1. open"], ss["2. high"], ss["3. low"], ss["4. close"]  ]
                 print("stock_data info {}".format(stock_data))

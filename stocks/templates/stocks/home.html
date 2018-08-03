@@ -8,15 +8,18 @@
         <ol>
             <table class="table table-hover">
                 <tr>
+                    <th>Ticker</th>
                     <th>Open</th>
                     <th>High</th>
                     <th>Low</th>
                     <th>Close</th>
                 </tr>
                 <tr>
-                    {% for info in stock_data %}
-                    <td>{{ info }}</td>
-                {% endfor %}
+                    {% for ticker in stock_data.values %}
+                    {% for stuff in ticker %}
+                    <td>{{ stuff }}</td>
+                    {% endfor %}
+                    {% endfor %}
             </tr>
         </table> 
         {% else %}
