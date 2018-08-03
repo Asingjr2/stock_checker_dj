@@ -2,6 +2,7 @@ import time
 from django.views import View
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.contrib import messages
 from datetime import date, datetime, timedelta
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -11,55 +12,62 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 import requests
 
-from .models import Stock, Favorites
+from .models import Stock
 
 
 # Create your views here.
 class HomeView(View):
-
     def get(self, request):
-        queryset = Favorites.objects.all().filter(user__id = (self.request.user.id))
-        return render(request, "stocks/home.html", {"favorites": queryset})
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["favorites"] = Favorites.objects.all().filter(user__id = (self.request.user.id))
-    #     print(Favorites.objects.all().count())
-    #     return context
+        queryset = Stock.objects.all().filter(user__id = (self.request.user.id))
+        return render(request, "stocks/home.html", {"user_stocks": queryset})
 
 
 class StockSearchView(View):
     def get(self, request):
-        if "current_ticker" in request.session:
+        if "current_stock" in request.session:
             print("there is a stock")
-            # Fri1 = timedelta(days=-1)   # Will subtract day if calendar day falls on Sat
-            # Fri2 = timedelta(days=-2)   # Will subtract day if calendar day falls on Sun
-            # today= datetime.today()
+            Fri1 = timedelta(days=-1)   # Will subtract day if calendar day falls on Sat
+            Fri2 = timedelta(days=-2)   # Will subtract day if calendar day falls on Sun
+            today= datetime.today()
             
-            # if today.strftime("%A") == "Saturday":
-            #     today += Fri1
-            # if today.strftime("%A") == "Sunday":
-            #     today += Fri2
+            if today.strftime("%A") == "Saturday":
+                today += Fri1
+            if today.strftime("%A") == "Sunday":
+                today += Fri2
 
-            # today_formatted = today.strftime("%Y-%m-%d")
+            today_formatted = today.strftime("%Y-%m-%d")
+            print(today_formatted)
 
-            # response = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + str(request.session["current_ticker"]) + "&apikey=HVS4381TKE7Y9YOS")
-            # ss = response.json()['Time Series (Daily)'][today_formatted]
-            # stock_data = [ ss["1. open"], ss["2. high"], ss["3. low"], ss["4. close"]  ]
-            # context = {
-            #     # "stock_data": stock_data,
-            #     "stock": request.session["current_ticker"]
-            # }
-            # return render(request, "stocks/stock_search.html", context)
+            response = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + str(request.session["current_stock"]) + "&apikey=HVS4381TKE7Y9YOS")
+            print("response info {}".format(response))
+            print("****")
+            if 'Time Series (Daily)' in response.json():
+                print("real stock")
+                print(response.json()["Meta Data"]["2. Symbol"])
+                ss = response.json()['Time Series (Daily)'][today_formatted]
+                stock_data = [ response.json()["Meta Data"]["2. Symbol"],ss["1. open"], ss["2. high"], ss["3. low"], ss["4. close"]  ]
+                print("stock_data info {}".format(stock_data))
+                context = {
+                    "symbol" : request.session["current_stock"],
+                    "stock_data": stock_data,
+                    "stock": request.session["current_stock"]
+                }
+                return render(request, "stocks/stock_search.html", context)
+            else:
+                print("not real stock")
+                messages.warning(request, "SOMETHING EXOTIC")
+                return render(request, "stocks/stock_search.html")
+                
+            # return render(request, "stocks/stock_search.html")
+        else:
+            print("there is a no stock")
             return render(request, "stocks/stock_search.html")
-
-        # if "current_ticker" not in request.session:
-        #     return redirect("/stocks/home/")
 
 
     def post(self, request):
-        new_stock = str(request.POST["ticker"]).upper()
+        new_stock = request.POST["ticker"].upper()
         request.session["current_stock"] = new_stock
+        print(request.session["current_stock"])
         if Stock.objects.all().filter(ticker_symbol = new_stock):
             print("there was a match", new_stock)
         print("there was  not a match")

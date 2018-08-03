@@ -4,7 +4,7 @@
 <section>
 
     <div class="container" id="mt">
-        {% if favorites.count > 0 %}
+        {% if user_stocks.count > 0 %}
         <ol>
             <table class="table table-hover">
                 <tr>
@@ -24,30 +24,15 @@
                 <div id='center-text'>
                     <h1>NO STOCKS ADDED TO FAVORITES</h1>
                     <p>Enter a ticker below to check stock price information</p>
+                    <button class="btn btn-outline-success">
+                        <a href="/stocks/stock_search/">SEARCH FOR A STOCK</a>
+                    </button>
                 </div>
             </div>
         {% endif %}
         </ol>
     
-        <nav class="navbar fixed-bottom navbar-light " id="green">
-            <button class="btn btn-light mr-2">
-                <a href="">HOME</a>
-            </button>
-            <button class="btn btn-light">
-                <a href="">FAVORITES</a>
-            </button>
 
-            <form action="/stocks/stock_search" id="center" class="form-inline" method="post">
-                {% csrf_token %} 
-                <input type="text" class="form-control mr-sm-2" type="seach" placeholder="ticker" aria-label="Search" name="ticker">
-                <button class="btn btn-light my-2 my-sm-0"> Check Stock Info</button>
-            </form>
-
-            <button class="btn btn-light">
-                <a href="/accounts/logout">LOGOUT</a>
-            </button>
-            
-        </nav>
     </div>
 </section>
 {% endblock %}
