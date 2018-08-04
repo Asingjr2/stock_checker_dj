@@ -1,9 +1,8 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
 {% block body %}
-<section>
-
     <div class="container" id="mt">
+        <a href="{% url 'stocks:refresh_all' %} ">REFRESH ALL</a>
         {% if user_stocks.count > 0 %}
         <ol>
             <table class="table table-hover">
@@ -14,13 +13,15 @@
                     <th>Low</th>
                     <th>Close</th>
                 </tr>
+                {% for stock in user_stocks %}
                 <tr>
-                    {% for ticker in stock_data.values %}
-                    {% for stuff in ticker %}
-                    <td>{{ stuff }}</td>
-                    {% endfor %}
-                    {% endfor %}
-            </tr>
+                    <td>{{ stock.ticker_symbol }}</td>
+                    <td>{{ stock.s_open }}</td>
+                    <td>{{ stock.s_high }}</td>
+                    <td>{{ stock.s_low }}</td>
+                    <td>{{ stock.s_close }}</td>
+                </tr>
+                {% endfor %}
         </table> 
         {% else %}
             <div class="jumbotron">
@@ -34,8 +35,6 @@
             </div>
         {% endif %}
         </ol>
-    
 
     </div>
-</section>
 {% endblock %}
