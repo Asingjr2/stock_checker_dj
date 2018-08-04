@@ -12,6 +12,7 @@
                     <th>High</th>
                     <th>Low</th>
                     <th>Close</th>
+                    <td></td>
                 </tr>
                 {% for stock in user_stocks %}
                 <tr>
@@ -20,6 +21,12 @@
                     <td>{{ stock.s_high }}</td>
                     <td>{{ stock.s_low }}</td>
                     <td>{{ stock.s_close }}</td>
+                    <td>
+                        <form action="{% url 'rest:delete' stock.id %}" method="delete">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-warning">DELETE</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
         </table> 
