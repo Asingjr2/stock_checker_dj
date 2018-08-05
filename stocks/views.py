@@ -83,7 +83,7 @@ class StockSearchView(View):
                 }
                 return render(request, "stocks/stock_search.html", context)
             else:
-                messages.warning(request, "SOMETHING EXOTIC")
+                messages.warning(request, "NO STOCK TICKER FOUND")
                 return render(request, "stocks/stock_search.html")
         else:
             print("there is a no stock")
