@@ -36,3 +36,10 @@
     border-radius: 30px;
     padding: 15px;
 }
+#float_right{
+    float:right
+}
+#overflow{
+    height: 250px;
+    overflow:scroll;
+}

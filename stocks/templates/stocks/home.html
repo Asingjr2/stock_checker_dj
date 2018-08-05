@@ -4,8 +4,7 @@
     <div class="container" id="mt">
         <div  id="stock_list">
             {% if user_stocks.count > 0 %}
-            <ol>
-                <table class="table table-hover" >
+                <table class="table table-hover"  id="overflow">
                     <tr>
                     <th>Ticker</th>
                     <th>Open</th>
@@ -45,7 +44,6 @@
                 </div>
             </div>
             {% endif %}
-    </ol>
     </div>
 </div>
 {% endblock %}
