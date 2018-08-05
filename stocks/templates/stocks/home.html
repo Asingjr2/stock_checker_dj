@@ -2,17 +2,21 @@
 {% load staticfiles %}
 {% block body %}
     <div class="container" id="mt">
-        <a href="{% url 'stocks:refresh_all' %} ">REFRESH ALL</a>
-        {% if user_stocks.count > 0 %}
-        <ol>
-            <table class="table table-hover">
-                <tr>
+        <div  id="stock_list">
+            {% if user_stocks.count > 0 %}
+            <ol>
+                <table class="table table-hover" >
+                    <tr>
                     <th>Ticker</th>
                     <th>Open</th>
                     <th>High</th>
                     <th>Low</th>
                     <th>Close</th>
-                    <td></td>
+                    <td>
+                        <button class="btn btn-outline-success">
+                            <a href="{% url 'stocks:refresh_all' %} " >REFRESH ALL</a>
+                        </button>
+                    </td>
                 </tr>
                 {% for stock in user_stocks %}
                 <tr>
@@ -22,26 +26,29 @@
                     <td>{{ stock.s_low }}</td>
                     <td>{{ stock.s_close }}</td>
                     <td>
-                        <form action="{% url 'rest:delete' stock.id %}" method="delete">
+                        <form action="{% url 'rest:delete' stock.id %}" method="delete" id="delete_stock">
                             {% csrf_token %}
                             <button class="btn btn-outline-warning">DELETE</button>
                         </form>
                     </td>
                 </tr>
                 {% endfor %}
-        </table> 
-        {% else %}
-            <div class="jumbotron">
-                <div id='center-text'>
-                    <h1>NO STOCKS ADDED TO FAVORITES</h1>
-                    <p>Enter a ticker below to check stock price information</p>
-                    <button class="btn btn-outline-success">
+            </table> 
+            {% else %}
+        <div class="jumbotron">
+            <div id='center-text'>
+                <h1>NO STOCKS ADDED TO FAVORITES</h1>
+                <p>Enter a ticker below to check stock price information</p>
+                <button class="btn btn-outline-success">
                         <a href="/stocks/stock_search/">SEARCH FOR A STOCK</a>
                     </button>
                 </div>
             </div>
-        {% endif %}
-        </ol>
-
+            {% endif %}
+    </ol>
     </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/jquery.js' %}"></script>
 {% endblock %}
