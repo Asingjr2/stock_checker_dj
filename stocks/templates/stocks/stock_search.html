@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block body %}
+{% load staticfiles %}
+    <div class="container" id="mt">
+        <div class="row">
+            <div class="col-sm-10">
+                {% if day_open %}
+                <div id="stock_list">
+                    <table class="table table-hover table-light" >
+                    <tr>
+                        <th>TICKER</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                    </tr>
+                    <tr>
+                        <td>{{ symbol }}</td>
+                        <td>{{ day_open }}</td>
+                        <td>{{ day_high }}</td>
+                        <td>{{ day_low }}</td>
+                        <td>{{ day_close }}</td>
+                    </tr>
+                    <br>
+                    <div class="badge" id="float_right">
+                        <form id="add_stock" action="{% url 'rest:create' %}" method="post">
+                            {% csrf_token %} 
+                            <input type="hidden" name='ticker_symbol' value="{{ symbol }}">
+                            <input type="hidden" name="s_open" value="{{ day_open }}">
+                            <input type="hidden" name="s_close" value="{{ day_close }}">
+                            <input type="hidden" name="s_high" value="{{ day_high }}">
+                            <input type="hidden" name="s_low" value="{{ day_low }}">
+                            <input type="hidden" name="user" value="{{ request.user.id }}">
+                            <button  class="btn btn-outline-success">ADD TO FAVORITES</button>
+                        </form>
+                    </div>
+                </table> 
+            </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/jquery.js' %}"></script>
+{% endblock %}

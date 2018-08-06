@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block body %}
+{% load staticfiles %}
+    <div class="container" id="mt">
+        <div class="col-sm-10">
+            <div id="stock_list">
+                <div class="badge" id="center-text" >
+                    <h1>
+                        NO STOCK TICKER FOUND
+                    </h1>
+                    <h4>Try another symbol below</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/jquery.js' %}"></script>
+{% endblock %}

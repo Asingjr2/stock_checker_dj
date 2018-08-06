@@ -83,8 +83,7 @@ class StockSearchView(LoginRequiredMixin, View):
                 }
                 return render(request, "stocks/stock_search.html", context)
             else:
-                messages.warning(request, "NO STOCK TICKER FOUND")
-                return render(request, "stocks/stock_search.html")
+                return render(request, "stocks/empty_search.html")
         else:
             return render(request, "stocks/stock_search.html")
 
