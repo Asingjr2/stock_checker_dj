@@ -1,6 +1,4 @@
 $(document).ready(function(e){
-    console.log("in business");
-    
     $("#delete_stock").click(function(e){
         alert("Stock Deleted");
     })
@@ -9,3 +7,4 @@ $(document).ready(function(e){
         alert("Stock Saved");
     })
 })
+

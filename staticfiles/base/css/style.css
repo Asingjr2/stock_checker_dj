@@ -11,7 +11,8 @@
 #center-text{
     text-align: center;
     text-decoration: underline;
-    color: rgb(96, 211, 96)
+    color: rgb(96, 211, 96);
+    padding-left:100px;
 }
 #grey-black{
     background-color: rgba(246, 248, 242, 0.993)
