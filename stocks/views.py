@@ -16,7 +16,7 @@ from .models import Stock
 
 
 # Create your views here.
-class RefreshAllStocks(View):
+class RefreshAllStocks(LoginRequiredMixin, View):
     def get(self, request):
         user_stocks = Stock.objects.all().filter(user__id=self.request.user.id)
         today = datetime.today()
@@ -43,13 +43,13 @@ class RefreshAllStocks(View):
         return redirect("/stocks/home/")
 
 
-class HomeView(View):
+class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         queryset = Stock.objects.all().filter(user__id = (self.request.user.id))
         return render(request, "stocks/home.html", {"user_stocks": queryset})
 
 
-class StockSearchView(View):
+class StockSearchView(LoginRequiredMixin, View):
     def get(self, request):
         if "current_stock" in request.session:
             subtract_day = timedelta(days=-1)   # Will subtract day if calendar day falls on Sat
@@ -86,7 +86,6 @@ class StockSearchView(View):
                 messages.warning(request, "NO STOCK TICKER FOUND")
                 return render(request, "stocks/stock_search.html")
         else:
-            print("there is a no stock")
             return render(request, "stocks/stock_search.html")
 
     def post(self, request):

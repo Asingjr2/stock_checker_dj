@@ -135,14 +135,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-# Rest framework settings
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-    )
-}
-
-
 # Allauth settings
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
