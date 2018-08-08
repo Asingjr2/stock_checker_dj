@@ -21,29 +21,30 @@ class CreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user = self.request.user)
-        ticker = self.request.POST["ticker_symbol"]
         
         today = datetime.today()
+        current_time = datetime.now()
         subtract_day = timedelta(days=-1)
         substract_two_days = timedelta(days=-2)
 
+        # Altering time to cover cases where stock market is closed (i.e. Saturday, Sunday, before 9:30 AM EST).  Holidays closures not addressed below.
+        if int(current_time.strftime("%H")) < 9 and int(current_time.strftime("%M")) < 31:
+            today += subtract_day
         if today.strftime("%A") == "Saturday":
             today += subtract_day
         if today.strftime("%A") == "Sunday":
             today += substract_two_days
         
-        # Format used in JSON response
+        # Format used in stock API json response.
         today_formatted = today.strftime("%Y-%m-%d")
      
+        ticker = self.request.POST["ticker_symbol"]
         url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + ticker + "&apikey=HVS4381TKE7Y9YOS"
         resp = requests.get(url).json()['Time Series (Daily)'][today_formatted]
-
         serializer.save(s_open = round(float(resp["1. open"]),2))
         serializer.save(s_high = round(float(resp["2. high"]),2))
         serializer.save(s_low = round(float(resp["3. low"]),2))
         serializer.save(s_close = round(float(resp["4. close"]),2))
-        test_stock = Stock.objects.last()
-        print(test_stock.ticker_symbol)
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):

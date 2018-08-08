@@ -51,34 +51,17 @@ class HomeView(LoginRequiredMixin, View):
         return render(request, "stocks/home.html", {"user_stocks": queryset, "ff": StockCreateForm})
 
 
-class StockSearchView(LoginRequiredMixin, CreateView):
-    model = Stock
-    form_class = StockCreateForm
-    template_name_suffix = _create
-
-    def form_valid(self, form):
-        self.object = form.save()
-        self.object.user = self.request.user.id)
-        return HttpResponseRedirect(redirect_to="/stocks/home/")
-
-
-
-
-# class StockDeleteView(DeleteView):
-#     model = Stock
-#     success_url = reverse("stock:home")
-
-
-
-
-
 class StockSearchView(LoginRequiredMixin, View):
     def get(self, request):
         if "current_stock" in request.session:
-            subtract_day = timedelta(days=-1)   # Will subtract day if calendar day falls on Sat
-            substract_two_days = timedelta(days=-2)   # Will subtract day if calendar day falls on Su
+            subtract_day = timedelta(days=-1)
+            substract_two_days = timedelta(days=-2)
             today = datetime.today()
-            
+            current_time = datetime.now()
+
+            # Altering time to cover cases where stock market is closed (i.e. Saturday, Sunday, before 9:30 AM EST).  Holidays closures not addressed below.
+            if int(current_time.strftime("%H")) < 9 and int(current_time.strftime("%M")) < 31:
+                today += subtract_day
             if today.strftime("%A") == "Saturday":
                 today += subtract_day
             if today.strftime("%A") == "Sunday":
@@ -86,12 +69,8 @@ class StockSearchView(LoginRequiredMixin, View):
 
             today_formatted = today.strftime("%Y-%m-%d")
 
-
             response = requests.get("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + str(request.session["current_stock"]) + "&apikey=HVS4381TKE7Y9YOS")
             if 'Time Series (Daily)' in response.json():
-                if  today_formatted not in response.json()['Time Series (Daily)']:
-                    today += subtract_day
-                    today_formatted = today.strftime("%Y-%m-%d")
                 ss = response.json()['Time Series (Daily)'][today_formatted]
                 day_open = round(float(ss["1. open"]),2)
                 day_high = round(float(ss["2. high"]),2)
