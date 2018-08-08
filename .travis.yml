@@ -1,0 +1,16 @@
+language: python
+
+python:
+  - "3.6"
+
+env:
+  global:
+    - DJANGO_SECRET_KEY='testSECRETkey$&!'
+    - PIP_USE_MIRRORS=true
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - python manage.py migrate
+  - python manage.py test --noinput
