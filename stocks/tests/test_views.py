@@ -19,7 +19,7 @@ class RefreshAllStocksTestCase(TestCase):
         client = Client()
         response = client.get(reverse("stocks:refresh_all"))
         self.assertEqual(response.status_code, 302)
-        
+         
 
 class HomeViewTestCase(TestCase):
     def test_200(self):
