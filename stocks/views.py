@@ -6,6 +6,7 @@ from django.contrib import messages
 from datetime import date, datetime, timedelta
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,6 +14,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 import requests
 
 from .models import Stock
+from .forms import StockCreateForm
 
 
 # Create your views here.
@@ -46,7 +48,28 @@ class RefreshAllStocks(LoginRequiredMixin, View):
 class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         queryset = Stock.objects.all().filter(user__id = (self.request.user.id))
-        return render(request, "stocks/home.html", {"user_stocks": queryset})
+        return render(request, "stocks/home.html", {"user_stocks": queryset, "ff": StockCreateForm})
+
+
+class StockSearchView(LoginRequiredMixin, CreateView):
+    model = Stock
+    form_class = StockCreateForm
+    template_name_suffix = _create
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.user = self.request.user.id)
+        return HttpResponseRedirect(redirect_to="/stocks/home/")
+
+
+
+
+# class StockDeleteView(DeleteView):
+#     model = Stock
+#     success_url = reverse("stock:home")
+
+
+
 
 
 class StockSearchView(LoginRequiredMixin, View):

@@ -3,6 +3,16 @@
 {% block body %}
     <div class="container" id="mt">
         <div  id="stock_list">
+
+            <div>
+                    <form action="{% url 'rest:create' %}" method="post" id="center main_search" class="form-inline">
+                        {% csrf_token %}
+                        {{ ff.as_p }}
+                        <button class="btn btn-light my-2 my-sm-0"> Check Stock Info</button>
+                    </form>
+            </div>
+
+
             {% if user_stocks.count > 0 %}
                 <table class="table table-hover"  id="overflow">
                     <tr>
