@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from ..factories import StockFactory, UserFactory
 
-# Tests incomplete
+Tests incomplete
 class RefreshAllStocksTestCase(TestCase):
     def test_200(self):
         logged_user = UserFactory()
@@ -52,19 +52,8 @@ class StockSearchViewTestCase(TestCase):
         response = client.get(reverse("stocks:stock_search"))
         self.assertEqual(response.status_code, 302)
 
-# Tests incomplete
 class CreateAPIViewTestCase(TestCase):
-    def test_200(self):
-        logged_user = UserFactory()
-        data = {}
-
-        url = reverse("rest:create")
-        client = Client()
-        client.force_login(logged_user)
-        response = client.post(url, data, follow=True)
-        self.assertEqual(response.status_code, 200)
-
-    # Access forbidden based on if not authenticated based on permission class.
+    Access forbidden based on if not authenticated based on permission class.
     def test_403(self):
         data = {}
 
