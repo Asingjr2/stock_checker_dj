@@ -53,7 +53,7 @@ class StockSearchViewTestCase(TestCase):
 
 
 class CreateAPIViewTestCase(TestCase):
-    Access forbidden based on if not authenticated based on permission class.
+    # Access forbidden based on if not authenticated based on permission class.
     def test_403(self):
         data = {}
 
