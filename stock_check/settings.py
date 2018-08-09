@@ -154,15 +154,6 @@ SITE_ID = 2
 LOGIN_REDIRECT_URL = "/stocks/home/"
 ACCOUNT_LOGOUT_REDIRECT_URL ="/accounts/login"
 
-
-# Heroku server support settings
-# Staticfiles support
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'staticfiles'),
-# )
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 django_heroku.settings(locals())

@@ -45,6 +45,7 @@ class CreateAPIView(generics.CreateAPIView):
         serializer.save(s_high = round(float(resp["2. high"]),2))
         serializer.save(s_low = round(float(resp["3. low"]),2))
         serializer.save(s_close = round(float(resp["4. close"]),2))
+
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):

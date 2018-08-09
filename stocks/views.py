@@ -48,6 +48,11 @@ class RefreshAllStocks(LoginRequiredMixin, View):
 class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         queryset = Stock.objects.all().filter(user__id = (self.request.user.id))
+        if "current_stock" in request.session:
+            # Delete current stock saved from stock query
+            del request.session["current_stock"]
+            request.session.modified = True
+
         return render(request, "stocks/home.html", {"user_stocks": queryset, "ff": StockCreateForm})
 
 
@@ -83,16 +88,17 @@ class StockSearchView(LoginRequiredMixin, View):
                     "day_high": day_high,
                     "day_low": day_low,
                 }
+
                 return render(request, "stocks/stock_search.html", context)
             else:
-                return render(request, "stocks/empty_search.html")
+                # HTML page being displayed in api returns no stock data
+                return render(request, "stocks/bad_search.html")
         else:
-            return render(request, "stocks/stock_search.html")
+            # HTML page for initial search
+            return render(request, "stocks/empty_search.html")
 
+    # Post method to display stock data before user commits to adding to favorites
     def post(self, request):
         new_stock = request.POST["ticker"].upper()
         request.session["current_stock"] = new_stock
-        if Stock.objects.all().filter(ticker_symbol = new_stock):
-            print("there was a match", new_stock)
-        print("there was  not a match")
         return redirect("/stocks/stock_search/")
